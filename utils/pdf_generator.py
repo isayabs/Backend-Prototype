@@ -60,14 +60,18 @@ def generate_pdf(title, start_date, end_date, df, output_filename, summary_text:
         table_data = [["No data available for the selected range"]]    
 
     num_cols = len(table_data[0])
-    available_width = letter[0] - (doc.leftMargin + doc.rightMargin)    
-    col_widths = [
-    available_width * 0.15,   
-    available_width * 0.30,   
-    available_width * 0.20,   
-    available_width * 0.10,  
-    available_width * 0.25,   
-    ]
+    available_width = letter[0] - (doc.leftMargin + doc.rightMargin) 
+
+    if set(df.columns) == {"sensor_id", "sensor_name", "sensor_type", "status", "last_updated"}:
+        col_widths = [
+            available_width * 0.15,  
+            available_width * 0.30,  
+            available_width * 0.20,  
+            available_width * 0.10,  
+            available_width * 0.25,  
+        ]
+    else:
+        col_widths = [available_width / num_cols] * num_cols
 
     table = Table(table_data, colWidths=col_widths)
 

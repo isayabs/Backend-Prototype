@@ -4,6 +4,7 @@ from database.connection import load_csv
 from utils.pdf_generator import generate_pdf
 import pandas as pd
 from utils.date_parser import parse_date
+from utils.date_ranges import last_7_days, last_30_days
 
 router = APIRouter(prefix="/report", tags=["Energy Generated"])
 
@@ -38,3 +39,66 @@ def get_energy_generated_pdf(start: str, end: str):
     )
 
     return FileResponse(filepath, media_type="application/pdf", filename="energy_generated_report.pdf")
+
+# LAST 7 DAYS
+@router.get("/energy-generated/last7")
+def get_energy_generated_last7():
+    df = load_csv("energy_generated.csv")
+    df["ts"] = pd.to_datetime(df["ts"])
+
+    start, end = last_7_days()
+
+    filtered = df[(df["ts"] >= start) & (df["ts"] <= end)]
+    return filtered.to_dict(orient="records")
+
+
+@router.get("/energy-generated/last7/pdf")
+def get_energy_generated_last7_pdf():
+    df = load_csv("energy_generated.csv")
+    df["ts"] = pd.to_datetime(df["ts"])
+
+    start, end = last_7_days()
+
+    filtered = df[(df["ts"] >= start) & (df["ts"] <= end)]
+
+    filepath = generate_pdf(
+        title="Energy Generated Report (Last 7 Days)",
+        start_date=start.strftime("%Y-%m-%d"),
+        end_date=end.strftime("%Y-%m-%d"),
+        df=filtered,
+        output_filename="energy_generated_last7.pdf"
+    )
+
+    return FileResponse(filepath, media_type="application/pdf", filename="energy_generated_last7.pdf")
+
+
+# LAST 30 DAYS
+@router.get("/energy-generated/last30")
+def get_energy_generated_last30():
+    df = load_csv("energy_generated.csv")
+    df["ts"] = pd.to_datetime(df["ts"])
+
+    start, end = last_30_days()
+
+    filtered = df[(df["ts"] >= start) & (df["ts"] <= end)]
+    return filtered.to_dict(orient="records")
+
+
+@router.get("/energy-generated/last30/pdf")
+def get_energy_generated_last30_pdf():
+    df = load_csv("energy_generated.csv")
+    df["ts"] = pd.to_datetime(df["ts"])
+
+    start, end = last_30_days()
+
+    filtered = df[(df["ts"] >= start) & (df["ts"] <= end)]
+
+    filepath = generate_pdf(
+        title="Energy Generated Report (Last 30 Days)",
+        start_date=start.strftime("%Y-%m-%d"),
+        end_date=end.strftime("%Y-%m-%d"),
+        df=filtered,
+        output_filename="energy_generated_last30.pdf"
+    )
+
+    return FileResponse(filepath, media_type="application/pdf", filename="energy_generated_last30.pdf")

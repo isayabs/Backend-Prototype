@@ -4,6 +4,7 @@ from database.connection import load_csv
 from utils.pdf_generator import generate_pdf
 import pandas as pd
 from utils.date_parser import parse_date
+from utils.date_ranges import last_7_days, last_30_days
 
 router = APIRouter(prefix="/report", tags=["Energy Consumed"])
 
@@ -38,3 +39,66 @@ def get_energy_consumed_pdf(start: str, end: str):
     )
 
     return FileResponse(filepath, media_type="application/pdf", filename="energy_consumed_report.pdf")
+
+# LAST 7 DAYS
+@router.get("/energy-consumed/last7")
+def get_energy_consumed_last7():
+    df = load_csv("energy_consumed.csv")
+    df["ts"] = pd.to_datetime(df["ts"])
+
+    start, end = last_7_days()
+
+    filtered = df[(df["ts"] >= start) & (df["ts"] <= end)]
+    return filtered.to_dict(orient="records")
+
+
+@router.get("/energy-consumed/last7/pdf")
+def get_energy_consumed_last7_pdf():
+    df = load_csv("energy_consumed.csv")
+    df["ts"] = pd.to_datetime(df["ts"])
+
+    start, end = last_7_days()
+
+    filtered = df[(df["ts"] >= start) & (df["ts"] <= end)]
+
+    filepath = generate_pdf(
+        title="Energy Consumed Report (Last 7 Days)",
+        start_date=start.strftime("%Y-%m-%d"),
+        end_date=end.strftime("%Y-%m-%d"),
+        df=filtered,
+        output_filename="energy_consumed_last7.pdf"
+    )
+
+    return FileResponse(filepath, media_type="application/pdf", filename="energy_consumed_last7.pdf")
+
+
+# LAST 30 DAYS
+@router.get("/energy-consumed/last30")
+def get_energy_consumed_last30():
+    df = load_csv("energy_consumed.csv")
+    df["ts"] = pd.to_datetime(df["ts"])
+
+    start, end = last_30_days()
+
+    filtered = df[(df["ts"] >= start) & (df["ts"] <= end)]
+    return filtered.to_dict(orient="records")
+
+
+@router.get("/energy-consumed/last30/pdf")
+def get_energy_consumed_last30_pdf():
+    df = load_csv("energy_consumed.csv")
+    df["ts"] = pd.to_datetime(df["ts"])
+
+    start, end = last_30_days()
+
+    filtered = df[(df["ts"] >= start) & (df["ts"] <= end)]
+
+    filepath = generate_pdf(
+        title="Energy Consumed Report (Last 30 Days)",
+        start_date=start.strftime("%Y-%m-%d"),
+        end_date=end.strftime("%Y-%m-%d"),
+        df=filtered,
+        output_filename="energy_consumed_last30.pdf"
+    )
+
+    return FileResponse(filepath, media_type="application/pdf", filename="energy_consumed_last30.pdf")
