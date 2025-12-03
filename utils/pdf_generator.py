@@ -34,7 +34,7 @@ def generate_pdf(title, start_date, end_date, df, output_filename):
 
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
 
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 11),
 
         ('BOTTOMPADDING', (0, 0), (-1,0), 8),
@@ -49,6 +49,6 @@ def generate_pdf(title, start_date, end_date, df, output_filename):
 
     table.drawOn(c, x, y)
 
-    c.save
+    c.save()
 
     return filepath
