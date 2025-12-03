@@ -1,0 +1,38 @@
+sensor_id,sensor_name,sensor_type,status,last_updated
+295,Temp Sensor A1,Temperature,ON,2025-12-01 09:00:00
+334,Temp Sensor A2,Temperature,OFF,2025-12-01 09:00:00
+847,Temp Sensor A3,Temperature,ON,2025-12-01 09:00:00
+170,HVAC Duct Sensor 1,HVAC,ON,2025-12-01 09:00:00
+325,HVAC Duct Sensor 2,HVAC,OFF,2025-12-01 09:00:00
+481,Solar Panel Output 1,Solar,ON,2025-12-01 09:00:00
+599,Solar Panel Output 2,Solar,ON,2025-12-01 09:00:00
+794,Solar Panel Output 3,Solar,OFF,2025-12-01 09:00:00
+78,Inverter Monitor 1,Inverter,ON,2025-12-01 09:00:00
+233,Inverter Monitor 2,Inverter,OFF,2025-12-01 09:00:00
+389,Inverter Heat Sensor,Inverter,ON,2025-12-01 09:00:00
+545,Building Load Meter 1,Load,ON,2025-12-01 09:00:00
+701,Building Load Meter 2,Load,OFF,2025-12-01 09:00:00
+857,Building Load Meter 3,Load,ON,2025-12-01 09:00:00
+141,Humidity Sensor 1,Environment,ON,2025-12-01 09:00:00
+296,Humidity Sensor 2,Environment,OFF,2025-12-01 09:00:00
+413,CO2 Monitor 1,Environment,ON,2025-12-01 09:00:00
+303,CO2 Monitor 2,Environment,OFF,2025-12-01 09:00:00
+342,Air Quality Sensor 1,Environment,ON,2025-12-01 09:00:00
+381,Air Quality Sensor 2,Environment,OFF,2025-12-01 09:00:00
+420,Smoke Detector 1,Safety,ON,2025-12-01 09:00:00
+459,Smoke Detector 2,Safety,ON,2025-12-01 09:00:00
+498,Fire Panel Status,Safety,OFF,2025-12-01 09:00:00
+537,Motion Sensor 1,Security,ON,2025-12-01 09:00:00
+469,Motion Sensor 2,Security,OFF,2025-12-01 09:00:00
+508,Door Contact 1,Security,ON,2025-12-01 09:00:00
+366,Door Contact 2,Security,OFF,2025-12-01 09:00:00
+217,Window Break Sensor,Security,ON,2025-12-01 09:00:00
+255,Light Level Sensor 1,Environment,ON,2025-12-01 09:00:00
+294,Light Level Sensor 2,Environment,OFF,2025-12-01 09:00:00
+333,Water Leak Detector 1,Safety,ON,2025-12-01 09:00:00
+372,Water Leak Detector 2,Safety,OFF,2025-12-01 09:00:00
+411,Elevator Status Sensor,Building,ON,2025-12-01 09:00:00
+450,Boiler Pressure Sensor,HVAC,ON,2025-12-01 09:00:00
+489,Chiller Flow Sensor,HVAC,OFF,2025-12-01 09:00:00
+528,Parking Ventilation Sensor,HVAC,ON,2025-12-01 09:00:00
+56,Generator Health Monitor,Power,ON,2025-12-01 09:00:00
