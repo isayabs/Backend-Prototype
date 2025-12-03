@@ -1,54 +1,92 @@
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
-from reportlab.platypus import Table, TableStyle
+from reportlab.platypus import (
+    Table, 
+    TableStyle,
+    Paragraph,
+    Spacer,
+    SimpleDocTemplate
+)
+from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
 import os
 
 PDF_DIR = "static/pdfs/"
 
-def generate_pdf(title, start_date, end_date, df, output_filename):
-    os.makedirs(PDF_DIR, exist_ok=True)
+def add_page_number(canvas, doc):
+    page_num = canvas.getPageNumber()
+    text = f"Page {page_num}"
+    canvas.setFont("Helvetica", 10)
+    canvas.drawRightString(
+        doc.pagesize[0] - 40,   
+        20,  
+        text             
+    )
 
+def generate_pdf(title, start_date, end_date, df, output_filename, summary_text: str | None=None):
+    os.makedirs(PDF_DIR, exist_ok=True)
     filepath = os.path.join(PDF_DIR, output_filename)
 
-    c = canvas.Canvas(filepath, pagesize=letter)
-    width, height = letter
+    doc = SimpleDocTemplate(
+        filepath,
+        pagesize=letter,
+        leftMargin=50,
+        rightMargin=50,
+        bottomMargin=50,
+    )
 
-    c.setFont("Helvetica-Bold", 20)
-    c.drawCentredString(width / 2, height - 60, title)
+    styles = getSampleStyleSheet()
+    story = []
 
-    c.setFont("Helvetica", 12)
-    c.drawString(50, height - 100, f"Date Range: {start_date} to {end_date}")
+    story.append(Paragraph(title, styles["Title"]))
+    story.append(Spacer(1,12))
 
+    story.append(Paragraph(f"Date Range: {start_date} to {end_date}", styles["Normal"]))
     today = datetime.now().strftime("%B %d, %Y")
-    c.drawString(50, height - 120, f"Report Generated: {today}")
+    story.append(Paragraph(f"Report Generated: {today}", styles["Normal"]))
+    story.append(Spacer(1, 12))
 
-    table_data = [df.columns.tolist()] + df.values.tolist()
+    if summary_text:
+        story.append(Paragraph("Summary:", styles["Heading3"]))
 
-    table = Table(table_data, colWidths=[(width - 100) / len(df.columns)] * len(df.columns))
+        for line in summary_text.split("\n"):
+            story.append(Paragraph(line, styles["Normal"]))
+        story.append(Spacer(1, 12))
 
-    style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+    if df is not None and not df.empty:
+        table_data = [df.columns.tolist()] + df.values.tolist()
+    else:
+        table_data = [["No data available for the selected range"]]    
 
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    num_cols = len(table_data[0])
+    available_width = letter[0] - (doc.leftMargin + doc.rightMargin)    
+    col_widths = [
+    available_width * 0.15,   
+    available_width * 0.30,   
+    available_width * 0.20,   
+    available_width * 0.10,  
+    available_width * 0.25,   
+    ]
 
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 11),
+    table = Table(table_data, colWidths=col_widths)
 
-        ('BOTTOMPADDING', (0, 0), (-1,0), 8),
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
+        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("FONTSIZE", (0, 0), (-1, 0), 11),
+        ("BOTTOMPADDING", (0, 0), (-1, 0), 8),
+        ("GRID", (0, 0), (-1, -1), 0.5, colors.black),
+    ]))
 
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
-    ])
-    table.setStyle(style)
+    story.append(table)
 
-    table_width, table_height = table.wrap(0, 0)
-    x = 50
-    y = height - 160 - table_height
-
-    table.drawOn(c, x, y)
-
-    c.save()
+    doc.build(
+        story,
+        onFirstPage=add_page_number,
+        onLaterPages=add_page_number,
+    )
 
     return filepath
