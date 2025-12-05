@@ -107,7 +107,7 @@ def get_temperature_last30_pdf():
 
     start, end = last_30_days()
 
-    filtered = df[(df["timestamp"] >= start) & (df["ttimestamp"] <= end)]
+    filtered = df[(df["timestamp"] >= start) & (df["timestamp"] <= end)]
     grouped = group_by_date(filtered, "timestamp")
 
     filepath = generate_pdf(

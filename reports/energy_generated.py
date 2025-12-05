@@ -10,7 +10,7 @@ from utils.grouping import group_by_date
 router = APIRouter(prefix="/report", tags=["Energy Generated"])
 
 
-@router.get("/report/energy-generated")
+@router.get("/energy-generated")
 def get_energy_generated(start: str, end:str):
     df = load_csv("energy_generated.csv")
 
@@ -23,7 +23,7 @@ def get_energy_generated(start: str, end:str):
     filtered = df[(df["timestamp"] >= start_dt) & (df["timestamp"] <= end_dt)]
     return filtered.to_dict(orient="records")
 
-@router.get("/energy-generated")
+@router.get("/energy-generated/pdf")
 def get_energy_generated_pdf(start: str, end: str):
     df = load_csv("energy_generated.csv")
 
